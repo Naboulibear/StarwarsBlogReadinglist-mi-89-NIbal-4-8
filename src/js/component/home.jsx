@@ -10,16 +10,19 @@ const IMAGE_BASE_URL =
 const ENTITY_CONFIG = {
 people: {
 title: "Characters",
+singular: "character",
 imageFolder: "characters",
 summaryFields: ["gender", "hair_color", "eye_color"]
 },
 vehicles: {
 title: "Vehicles",
+singular: "vehicle",
 imageFolder: "vehicles",
 summaryFields: ["model", "vehicle_class", "manufacturer"]
 },
 planets: {
 title: "Planets",
+singular: "planet",
 imageFolder: "planets",
 summaryFields: ["population", "terrain", "climate"]
 }
@@ -404,7 +407,7 @@ event.currentTarget.src =
 <div>
 <h1 className="section-title mb-2">{entity.name}</h1>
 <p className="text-muted">
-Explore key facts about this {ENTITY_CONFIG[type].title.slice(0, -1).toLowerCase()} from
+Explore key facts about this {ENTITY_CONFIG[type].singular} from
 the Star Wars universe.
 </p>
 </div>
