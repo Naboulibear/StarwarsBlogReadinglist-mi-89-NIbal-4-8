@@ -1,13 +1,18 @@
-//import react into the bundle
 import React from "react";
 import ReactDOM from "react-dom/client";
-
-// include your styles into the webpack bundle
+import { BrowserRouter } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "../styles/index.css";
-
-//import your own components
 import Home from "./component/home.jsx";
+import { FavoritesProvider } from "./context/favoritesContext.jsx";
 
-//render your react application
-ReactDOM.createRoot(document.getElementById('app')).render(<Home/>);
-
+ReactDOM.createRoot(document.getElementById("app")).render(
+<React.StrictMode>
+<BrowserRouter>
+<FavoritesProvider>
+<Home />
+</FavoritesProvider>
+</BrowserRouter>
+</React.StrictMode>
+);
