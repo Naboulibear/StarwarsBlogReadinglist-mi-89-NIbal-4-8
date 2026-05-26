@@ -228,7 +228,7 @@ type: PropTypes.string.isRequired
 const EntityCard = ({ type, entity }) => {
 const config = ENTITY_CONFIG[type];
 return (
-<div className="col">
+<div style={{ minWidth: "280px", flexShrink: 0 }}>
 <div className="card h-100 shadow-sm">
 <img
 src={getImageUrl(type, entity.id)}
@@ -274,7 +274,13 @@ const EntitySection = ({ type, entities, loading, error }) => (
 {loading ? <p>Loading {ENTITY_CONFIG[type].title.toLowerCase()}...</p> : null}
 {error ? <p className="text-danger">{error}</p> : null}
 {!loading && !error ? (
-<div className="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+<div style={{
+overflowX: "auto",
+display: "flex",
+gap: "1rem",
+paddingBottom: "1rem",
+scrollBehavior: "smooth"
+}}>
 {entities.map((entity) => (
 <EntityCard key={`${type}-${entity.id}`} type={type} entity={entity} />
 ))}
