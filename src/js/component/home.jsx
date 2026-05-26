@@ -58,9 +58,9 @@ const FALLBACK_DATA = {
 		}
 	],
 	planets: [
-		{ id: "1", name: "Tatooine", population: "200000", terrain: "desert", climate: "arid", orbital_period: "365", rotation_period: "23", diameter: "10465" },
-		{ id: "2", name: "Alderaan", population: "2000000000", terrain: "grasslands, mountains", climate: "temperate", orbital_period: "364", rotation_period: "24", diameter: "12500" },
-		{ id: "3", name: "Yavin IV", population: "1000", terrain: "jungle, rainforests", climate: "temperate, tropical", orbital_period: "4818", rotation_period: "24", diameter: "10200" }
+		{ id: "1", name: "Tatooine", population: "200000", terrain: "desert", climate: "arid" },
+		{ id: "2", name: "Alderaan", population: "2000000000", terrain: "grasslands, mountains", climate: "temperate" },
+		{ id: "3", name: "Yavin IV", population: "1000", terrain: "jungle, rainforests", climate: "temperate, tropical" }
 	]
 };
 
@@ -132,7 +132,7 @@ for (const record of records) {
 try {
 const detail = await fetchEntityDetail(type, record.uid);
 details.push(detail);
-await sleep(200);
+await sleep(500);
 } catch (error) {
 details.push({
 	id: String(record.uid),
@@ -275,7 +275,7 @@ name: PropTypes.string.isRequired
 }).isRequired
 };
 
-const EntitySection = ({ type, entities, loading, error = "" }) => (
+const EntitySection = ({ type, entities, loading, error }) => (
 <section className="mb-5">
 <h2 className="section-title mb-3">{ENTITY_CONFIG[type].title}</h2>
 {loading ? <p>Loading {ENTITY_CONFIG[type].title.toLowerCase()}...</p> : null}
@@ -306,6 +306,10 @@ name: PropTypes.string.isRequired
 ).isRequired,
 loading: PropTypes.bool.isRequired,
 error: PropTypes.string
+};
+
+EntitySection.defaultProps = {
+error: ""
 };
 
 const HomePage = () => {
@@ -340,7 +344,7 @@ error: error.message || `Unable to load ${ENTITY_CONFIG[type].title}`
 });
 }, delay);
 
-delay += 2000;
+delay += 6000;
 });
 }, []);
 
@@ -370,8 +374,6 @@ const sortedFields = useMemo(() => {
 if (!entity) return [];
 return Object.entries(entity).filter(([key]) => key !== "id");
 }, [entity]);
-
-const config = type ? ENTITY_CONFIG[type] : null;
 
 useEffect(() => {
 if (!type || !id) {
@@ -425,7 +427,7 @@ event.currentTarget.src =
 <div>
 <h1 className="section-title mb-2">{entity.name}</h1>
 <p className="text-muted">
-Explore key facts about this {config.singular} from
+Explore key facts about this {ENTITY_CONFIG[type].singular} from
 the Star Wars universe.
 </p>
 </div>
@@ -449,7 +451,6 @@ the Star Wars universe.
 </tbody>
 </table>
 </div>
-
 <div className="d-flex gap-2">
 <button type="button" onClick={() => navigate(-1)} className="btn btn-outline-secondary">
 Go back
