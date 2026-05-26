@@ -28,6 +28,119 @@ summaryFields: ["population", "terrain", "climate"]
 }
 };
 
+const DESCRIPTIONS = {
+people: {
+"1": {
+name: "Luke Skywalker",
+birthYear: "19 BBY",
+description: "A young farm boy from Tatooine who becomes one of the greatest Jedi in the galaxy. Known for his bravery, optimism, and connection to the Force, Luke helps defeat the Empire and redeem Darth Vader."
+},
+"2": {
+name: "C-3PO",
+birthYear: "112 BBY",
+description: "A golden protocol droid designed for etiquette and translation. C-3PO is fluent in millions of languages and is famous for being nervous, talkative, and loyal to his friends."
+},
+"3": {
+name: "R2-D2",
+birthYear: "33 BBY",
+description: "A resourceful astromech droid who assists pilots, repairs ships, and stores important data. R2-D2 is courageous, clever, and communicates through electronic beeps and whistles."
+},
+"4": {
+name: "Darth Vader",
+birthYear: "41.9 BBY",
+description: "A powerful Sith Lord once known as Anakin Skywalker. Wearing black armor and a mechanical breathing suit, Vader serves the Empire before ultimately returning to the light side."
+},
+"5": {
+name: "Leia Organa",
+birthYear: "19 BBY",
+description: "A fearless princess, military leader, and member of the Rebel Alliance. Leia is intelligent, determined, and dedicated to fighting against tyranny in the galaxy."
+},
+"6": {
+name: "Owen Lars",
+birthYear: "52 BBY",
+description: "A moisture farmer living on Tatooine and the uncle of Luke Skywalker. Owen is practical, protective, and tries to keep Luke away from dangerous adventures."
+},
+"7": {
+name: "Beru Whitesun Lars",
+birthYear: "47 BBY",
+description: "Luke Skywalker's caring aunt who lives on the Lars moisture farm. Beru is compassionate and supportive, encouraging Luke to dream beyond his life on Tatooine."
+},
+"8": {
+name: "R5-D4",
+birthYear: "Unknown",
+description: "A red astromech droid originally selected by Owen Lars before malfunctioning. The breakdown leads Luke's family to purchase R2-D2 instead."
+}
+},
+vehicles: {
+"4": {
+name: "Sandcrawler",
+description: "A massive desert transport vehicle operated by Jawas on Tatooine. Sandcrawlers carry scavenged machinery, droids, and supplies across the harsh dunes."
+},
+"6": {
+name: "T-16 Skyhopper",
+description: "A high-speed civilian airspeeder used for recreation and training on Tatooine. Luke Skywalker practiced flying and target shooting with this vehicle before becoming a pilot."
+},
+"7": {
+name: "X-34 Landspeeder",
+description: "A compact hovering vehicle commonly used on Tatooine. Luke uses an X-34 landspeeder for transportation across the desert settlements."
+},
+"8": {
+name: "TIE/LN Starfighter",
+description: "The standard Imperial starfighter used by the Galactic Empire. It is fast, agile, and recognizable by its twin vertical solar panel wings."
+},
+"14": {
+name: "Snowspeeder",
+description: "A modified airspeeder used by the Rebel Alliance during the Battle of Hoth. Snowspeeders are equipped with harpoons and tow cables for combat against walkers."
+},
+"16": {
+name: "TIE/IN Interceptor",
+description: "An advanced Imperial starfighter designed for greater speed and firepower. Its sharp wing design makes it one of the Empire's deadliest starfighters."
+},
+"18": {
+name: "AT-AT",
+description: "A gigantic four-legged armored walker used by the Galactic Empire. AT-ATs transport troops and heavy weapons, especially during assaults like the Battle of Hoth."
+},
+"19": {
+name: "AT-ST",
+description: "A smaller two-legged Imperial walker used for scouting and ground support. AT-STs are fast and heavily armed but less armored than AT-ATs."
+}
+},
+planets: {
+"1": {
+name: "Tatooine",
+description: "A desert planet with twin suns located in the Outer Rim. Tatooine is home to smugglers, moisture farmers, Jawas, and the childhood home of Luke Skywalker."
+},
+"2": {
+name: "Alderaan",
+description: "A peaceful and beautiful world known for diplomacy and culture. Alderaan is the home planet of Leia Organa and is destroyed by the Death Star."
+},
+"3": {
+name: "Yavin IV",
+description: "A jungle-covered moon that serves as an important Rebel Alliance base. The Rebels launch their attack on the Death Star from Yavin IV."
+},
+"4": {
+name: "Hoth",
+description: "An icy and remote world used as a hidden Rebel base. Hoth becomes the site of a major battle between the Rebels and the Galactic Empire."
+},
+"5": {
+name: "Dagobah",
+description: "A swamp-covered planet strong in the Force. Jedi Master Yoda lives in exile on Dagobah and trains Luke Skywalker there."
+},
+"6": {
+name: "Bespin",
+description: "A gas giant famous for Cloud City, a floating mining colony. Bespin becomes the location of Luke Skywalker's duel with Darth Vader."
+},
+"7": {
+name: "Endor",
+description: "A forest moon inhabited by the Ewoks. The Rebel Alliance fights a crucial battle on Endor to destroy the Empire's shield generator."
+},
+"8": {
+name: "Naboo",
+description: "A lush planet known for its lakes, elegant cities, and peaceful culture. Naboo is the homeworld of Padmé Amidala and Emperor Palpatine."
+}
+}
+};
+
 const FALLBACK_DATA = {
 	people: [
 		{ id: "1", name: "Luke Skywalker", gender: "male", hair_color: "blond", eye_color: "blue" },
@@ -132,7 +245,7 @@ for (const record of records) {
 try {
 const detail = await fetchEntityDetail(type, record.uid);
 details.push(detail);
-await sleep(500);
+await sleep(200);
 } catch (error) {
 details.push({
 	id: String(record.uid),
@@ -275,7 +388,7 @@ name: PropTypes.string.isRequired
 }).isRequired
 };
 
-const EntitySection = ({ type, entities, loading, error }) => (
+const EntitySection = ({ type, entities, loading, error = "" }) => (
 <section className="mb-5">
 <h2 className="section-title mb-3">{ENTITY_CONFIG[type].title}</h2>
 {loading ? <p>Loading {ENTITY_CONFIG[type].title.toLowerCase()}...</p> : null}
@@ -306,10 +419,6 @@ name: PropTypes.string.isRequired
 ).isRequired,
 loading: PropTypes.bool.isRequired,
 error: PropTypes.string
-};
-
-EntitySection.defaultProps = {
-error: ""
 };
 
 const HomePage = () => {
@@ -344,7 +453,7 @@ error: error.message || `Unable to load ${ENTITY_CONFIG[type].title}`
 });
 }, delay);
 
-delay += 6000;
+delay += 2000;
 });
 }, []);
 
@@ -374,6 +483,9 @@ const sortedFields = useMemo(() => {
 if (!entity) return [];
 return Object.entries(entity).filter(([key]) => key !== "id");
 }, [entity]);
+
+const config = type ? ENTITY_CONFIG[type] : null;
+const customDescription = DESCRIPTIONS[type]?.[id];
 
 useEffect(() => {
 if (!type || !id) {
@@ -427,9 +539,13 @@ event.currentTarget.src =
 <div>
 <h1 className="section-title mb-2">{entity.name}</h1>
 <p className="text-muted">
-Explore key facts about this {ENTITY_CONFIG[type].singular} from
-the Star Wars universe.
+{customDescription?.description || `Explore key facts about this ${config.singular} from the Star Wars universe.`}
 </p>
+{customDescription?.birthYear && (
+<p className="text-muted mt-2">
+<strong>Birth Year:</strong> {customDescription.birthYear}
+</p>
+)}
 </div>
 <FavoriteButton item={{ id: entity.id, name: entity.name, type }} />
 </div>
@@ -451,6 +567,7 @@ the Star Wars universe.
 </tbody>
 </table>
 </div>
+
 <div className="d-flex gap-2">
 <button type="button" onClick={() => navigate(-1)} className="btn btn-outline-secondary">
 Go back
