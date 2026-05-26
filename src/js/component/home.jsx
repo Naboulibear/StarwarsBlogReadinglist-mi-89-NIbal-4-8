@@ -149,26 +149,27 @@ return getFallbackCollection(type);
 
 const FavoritesDropdown = () => {
 const { favorites, removeFavorite } = useFavorites();
+const [isOpen, setIsOpen] = useState(false);
 
 return (
 <div className="dropdown">
 <button
 className="btn btn-warning dropdown-toggle"
 type="button"
-id="favoritesDropdown"
-data-bs-toggle="dropdown"
-aria-expanded="false">
+onClick={() => setIsOpen(!isOpen)}
+aria-expanded={isOpen}>
 Favorites <span className="badge text-bg-dark ms-1">{favorites.length}</span>
 </button>
-<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="favoritesDropdown">
+<ul className={`dropdown-menu dropdown-menu-end ${isOpen ? "show" : ""}`} style={{ display: isOpen ? "block" : "none" }}>
 {favorites.length === 0 ? (
 <li><span className="dropdown-item text-muted">No favorites yet</span></li>
 ) : (
 favorites.map((favorite) => (
-<li key={`${favorite.type}-${favorite.id}`} className="d-flex justify-content-between align-items-center px-3 py-2" style={{ borderBottom: "1px solid #e9ecef" }}>
+<li key={`${favorite.type}-${favorite.id}`} className="d-flex justify-content-between align-items-center px-3 py-2" style={{ borderBottom: "1px solid #e9ecef", cursor: "pointer" }}>
 <Link
 className="text-decoration-none text-dark flex-grow-1"
-to={`/details/${favorite.type}/${favorite.id}`}>
+to={`/details/${favorite.type}/${favorite.id}`}
+onClick={() => setIsOpen(false)}>
 {favorite.name}
 </Link>
 <button
@@ -176,6 +177,7 @@ type="button"
 className="btn btn-sm btn-link text-danger p-0 ms-2"
 onClick={(e) => {
 e.preventDefault();
+e.stopPropagation();
 removeFavorite(favorite.type, favorite.id);
 }}
 aria-label={`Remove ${favorite.name} from favorites`}>
