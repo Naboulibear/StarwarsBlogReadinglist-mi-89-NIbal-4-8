@@ -245,7 +245,7 @@ for (const record of records) {
 try {
 const detail = await fetchEntityDetail(type, record.uid);
 details.push(detail);
-await sleep(200);
+await sleep(500);
 } catch (error) {
 details.push({
 	id: String(record.uid),
@@ -453,7 +453,7 @@ error: error.message || `Unable to load ${ENTITY_CONFIG[type].title}`
 });
 }, delay);
 
-delay += 2000;
+delay += 6000;
 });
 }, []);
 
