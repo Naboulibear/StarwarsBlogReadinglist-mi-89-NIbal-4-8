@@ -115,42 +115,15 @@ throw error;
 }
 };
 
-const fetchAllPages = async (type) => {
-const allRecords = [];
-let page = 1;
-let hasMore = true;
-
-while (hasMore) {
+const fetchEntityCollection = async (type) => {
 try {
-const response = await fetch(`${SWAPI_BASE_URL}/${type}?page=${page}&limit=10`);
-if (!response.ok) break;
+const response = await fetch(`${SWAPI_BASE_URL}/${type}?page=1&limit=8`);
+if (!response.ok) {
+throw new Error(`Unable to fetch ${type}`);
+}
 
 const payload = await response.json();
 const records = payload?.results || [];
-
-if (records.length === 0) {
-hasMore = false;
-} else {
-allRecords.push(...records);
-page++;
-}
-
-await new Promise(resolve => setTimeout(resolve, 500));
-} catch (error) {
-hasMore = false;
-}
-}
-
-return allRecords;
-};
-
-const fetchEntityCollection = async (type) => {
-try {
-const records = await fetchAllPages(type);
-
-if (records.length === 0) {
-return getFallbackCollection(type);
-}
 
 const details = await Promise.all(
 records.map(async (record) => {
@@ -334,11 +307,7 @@ planets: { data: [], loading: true, error: "" }
 });
 
 useEffect(() => {
-const types = Object.keys(ENTITY_CONFIG);
-let delay = 0;
-
-types.forEach((type) => {
-setTimeout(() => {
+Object.keys(ENTITY_CONFIG).forEach((type) => {
 fetchEntityCollection(type)
 .then((data) => {
 setCollections((current) => ({
@@ -356,9 +325,6 @@ error: error.message || `Unable to load ${ENTITY_CONFIG[type].title}`
 }
 }));
 });
-}, delay);
-
-delay += 2000;
 });
 }, []);
 
