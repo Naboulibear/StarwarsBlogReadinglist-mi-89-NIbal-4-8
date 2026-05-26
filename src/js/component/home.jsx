@@ -117,7 +117,7 @@ throw error;
 
 const fetchEntityCollection = async (type) => {
 try {
-const response = await fetch(`${SWAPI_BASE_URL}/${type}?page=1&limit=50`);
+const response = await fetch(`${SWAPI_BASE_URL}/${type}?page=1&limit=10`);
 if (!response.ok) {
 throw new Error(`Unable to fetch ${type}`);
 }
@@ -307,7 +307,11 @@ planets: { data: [], loading: true, error: "" }
 });
 
 useEffect(() => {
-Object.keys(ENTITY_CONFIG).forEach((type) => {
+const types = Object.keys(ENTITY_CONFIG);
+let delay = 0;
+
+types.forEach((type, index) => {
+setTimeout(() => {
 fetchEntityCollection(type)
 .then((data) => {
 setCollections((current) => ({
@@ -325,6 +329,9 @@ error: error.message || `Unable to load ${ENTITY_CONFIG[type].title}`
 }
 }));
 });
+}, delay);
+
+delay += 1000;
 });
 }, []);
 
