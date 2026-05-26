@@ -24,8 +24,7 @@ planets: {
 title: "Planets",
 singular: "planet",
 imageFolder: "planets",
-summaryFields: ["population", "terrain", "climate"],
-detailFields: ["orbital_period", "rotation_period", "diameter"]
+summaryFields: ["population", "terrain", "climate"]
 }
 };
 
@@ -373,7 +372,6 @@ return Object.entries(entity).filter(([key]) => key !== "id");
 }, [entity]);
 
 const config = type ? ENTITY_CONFIG[type] : null;
-const detailFields = config?.detailFields || [];
 
 useEffect(() => {
 if (!type || !id) {
@@ -452,31 +450,7 @@ the Star Wars universe.
 </table>
 </div>
 
-{detailFields.length > 0 && (
-<div className="mt-4">
-<h3 className="text-danger mb-3">Additional Information</h3>
-<div className="table-responsive">
-<table className="table table-striped table-bordered align-middle">
-<thead>
-<tr>
-<th className="text-danger">Property</th>
-<th className="text-danger">Value</th>
-</tr>
-</thead>
-<tbody>
-{detailFields.map((field) => (
-<tr key={field}>
-<th scope="row">{formatLabel(field)}</th>
-<td>{safeDisplayValue(entity[field])}</td>
-</tr>
-))}
-</tbody>
-</table>
-</div>
-</div>
-)}
-
-<div className="d-flex gap-2 mt-4">
+<div className="d-flex gap-2">
 <button type="button" onClick={() => navigate(-1)} className="btn btn-outline-secondary">
 Go back
 </button>
