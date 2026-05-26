@@ -93,6 +93,8 @@ const getFallbackCollection = (type) => FALLBACK_DATA[type] || [];
 const getFallbackEntity = (type, id) =>
 getFallbackCollection(type).find((item) => item.id === String(id));
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 const fetchEntityDetail = async (type, id) => {
 try {
 const response = await fetch(`${SWAPI_BASE_URL}/${type}/${id}`);
@@ -125,18 +127,19 @@ throw new Error(`Unable to fetch ${type}`);
 const payload = await response.json();
 const records = payload?.results || [];
 
-const details = await Promise.all(
-records.map(async (record) => {
+const details = [];
+for (const record of records) {
 try {
-return await fetchEntityDetail(type, record.uid);
+const detail = await fetchEntityDetail(type, record.uid);
+details.push(detail);
+await sleep(200);
 } catch (error) {
-return {
+details.push({
 	id: String(record.uid),
 	name: record.name
-};
+});
 }
-})
-);
+}
 
 return details;
 } catch (error) {
@@ -152,18 +155,17 @@ return (
 <button
 className="btn btn-warning dropdown-toggle"
 type="button"
+id="favoritesDropdown"
 data-bs-toggle="dropdown"
 aria-expanded="false">
 Favorites <span className="badge text-bg-dark ms-1">{favorites.length}</span>
 </button>
-<ul className="dropdown-menu dropdown-menu-end">
+<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="favoritesDropdown">
 {favorites.length === 0 ? (
-<li className="dropdown-item text-muted">No favorites yet</li>
+<li><span className="dropdown-item text-muted">No favorites yet</span></li>
 ) : (
 favorites.map((favorite) => (
-<li
-className="dropdown-item d-flex justify-content-between align-items-center gap-2"
-key={`${favorite.type}-${favorite.id}`}>
+<li key={`${favorite.type}-${favorite.id}`} className="d-flex justify-content-between align-items-center px-3 py-2" style={{ borderBottom: "1px solid #e9ecef" }}>
 <Link
 className="text-decoration-none text-dark flex-grow-1"
 to={`/details/${favorite.type}/${favorite.id}`}>
@@ -171,10 +173,13 @@ to={`/details/${favorite.type}/${favorite.id}`}>
 </Link>
 <button
 type="button"
-className="btn btn-sm btn-link text-danger p-0"
-onClick={() => removeFavorite(favorite.type, favorite.id)}
+className="btn btn-sm btn-link text-danger p-0 ms-2"
+onClick={(e) => {
+e.preventDefault();
+removeFavorite(favorite.type, favorite.id);
+}}
 aria-label={`Remove ${favorite.name} from favorites`}>
-<span aria-hidden="true">🗑</span>
+🗑
 </button>
 </li>
 ))
@@ -298,11 +303,11 @@ name: PropTypes.string.isRequired
 })
 ).isRequired,
 loading: PropTypes.bool.isRequired,
-error: PropTypes.string
-};
-
-EntitySection.defaultProps = {
-error: ""
+error: (props, propName) => {
+if (props[propName] != null && typeof props[propName] !== "string") {
+return new Error(`Invalid prop \`${propName}\` of type \`${typeof props[propName]}\` supplied to \`EntitySection\`, expected \`string\`.`);
+}
+}
 };
 
 const HomePage = () => {
@@ -313,7 +318,11 @@ planets: { data: [], loading: true, error: "" }
 });
 
 useEffect(() => {
-Object.keys(ENTITY_CONFIG).forEach((type) => {
+const types = Object.keys(ENTITY_CONFIG);
+let delay = 0;
+
+types.forEach((type) => {
+setTimeout(() => {
 fetchEntityCollection(type)
 .then((data) => {
 setCollections((current) => ({
@@ -331,6 +340,9 @@ error: error.message || `Unable to load ${ENTITY_CONFIG[type].title}`
 }
 }));
 });
+}, delay);
+
+delay += 2000;
 });
 }, []);
 
