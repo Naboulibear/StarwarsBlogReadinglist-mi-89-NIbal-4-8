@@ -1,10 +1,21 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useContext, useMemo, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 const FavoritesContext = createContext(null);
 
 export const FavoritesProvider = ({ children }) => {
 const [favorites, setFavorites] = useState([]);
+
+useEffect(() => {
+	const saved = localStorage.getItem("favorites");
+	if (saved) {
+		setFavorites(JSON.parse(saved));
+	}
+}, []);
+
+useEffect(() => {
+	localStorage.setItem("favorites", JSON.stringify(favorites));
+}, [favorites]);
 
 const isFavorite = (type, id) =>
 favorites.some((item) => item.type === type && item.id === String(id));
