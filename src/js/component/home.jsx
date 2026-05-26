@@ -273,7 +273,7 @@ name: PropTypes.string.isRequired
 }).isRequired
 };
 
-const EntitySection = ({ type, entities, loading, error }) => (
+const EntitySection = ({ type, entities, loading, error = "" }) => (
 <section className="mb-5">
 <h2 className="section-title mb-3">{ENTITY_CONFIG[type].title}</h2>
 {loading ? <p>Loading {ENTITY_CONFIG[type].title.toLowerCase()}...</p> : null}
@@ -303,11 +303,7 @@ name: PropTypes.string.isRequired
 })
 ).isRequired,
 loading: PropTypes.bool.isRequired,
-error: (props, propName) => {
-if (props[propName] != null && typeof props[propName] !== "string") {
-return new Error(`Invalid prop \`${propName}\` of type \`${typeof props[propName]}\` supplied to \`EntitySection\`, expected \`string\`.`);
-}
-}
+error: PropTypes.string
 };
 
 const HomePage = () => {
