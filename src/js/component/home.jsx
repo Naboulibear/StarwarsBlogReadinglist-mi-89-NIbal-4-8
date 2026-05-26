@@ -24,7 +24,8 @@ planets: {
 title: "Planets",
 singular: "planet",
 imageFolder: "planets",
-summaryFields: ["population", "terrain", "climate"]
+summaryFields: ["population", "terrain", "climate"],
+detailFields: ["orbital_period", "rotation_period", "diameter"]
 }
 };
 
@@ -58,9 +59,9 @@ const FALLBACK_DATA = {
 		}
 	],
 	planets: [
-		{ id: "1", name: "Tatooine", population: "200000", terrain: "desert", climate: "arid" },
-		{ id: "2", name: "Alderaan", population: "2000000000", terrain: "grasslands, mountains", climate: "temperate" },
-		{ id: "3", name: "Yavin IV", population: "1000", terrain: "jungle, rainforests", climate: "temperate, tropical" }
+		{ id: "1", name: "Tatooine", population: "200000", terrain: "desert", climate: "arid", orbital_period: "365", rotation_period: "23", diameter: "10465" },
+		{ id: "2", name: "Alderaan", population: "2000000000", terrain: "grasslands, mountains", climate: "temperate", orbital_period: "364", rotation_period: "24", diameter: "12500" },
+		{ id: "3", name: "Yavin IV", population: "1000", terrain: "jungle, rainforests", climate: "temperate, tropical", orbital_period: "4818", rotation_period: "24", diameter: "10200" }
 	]
 };
 
@@ -371,6 +372,9 @@ if (!entity) return [];
 return Object.entries(entity).filter(([key]) => key !== "id");
 }, [entity]);
 
+const config = type ? ENTITY_CONFIG[type] : null;
+const detailFields = config?.detailFields || [];
+
 useEffect(() => {
 if (!type || !id) {
 setError("Invalid entity type");
@@ -423,7 +427,7 @@ event.currentTarget.src =
 <div>
 <h1 className="section-title mb-2">{entity.name}</h1>
 <p className="text-muted">
-Explore key facts about this {ENTITY_CONFIG[type].singular} from
+Explore key facts about this {config.singular} from
 the Star Wars universe.
 </p>
 </div>
@@ -447,7 +451,32 @@ the Star Wars universe.
 </tbody>
 </table>
 </div>
-<div className="d-flex gap-2">
+
+{detailFields.length > 0 && (
+<div className="mt-4">
+<h3 className="text-danger mb-3">Additional Information</h3>
+<div className="table-responsive">
+<table className="table table-striped table-bordered align-middle">
+<thead>
+<tr>
+<th className="text-danger">Property</th>
+<th className="text-danger">Value</th>
+</tr>
+</thead>
+<tbody>
+{detailFields.map((field) => (
+<tr key={field}>
+<th scope="row">{formatLabel(field)}</th>
+<td>{safeDisplayValue(entity[field])}</td>
+</tr>
+))}
+</tbody>
+</table>
+</div>
+</div>
+)}
+
+<div className="d-flex gap-2 mt-4">
 <button type="button" onClick={() => navigate(-1)} className="btn btn-outline-secondary">
 Go back
 </button>
