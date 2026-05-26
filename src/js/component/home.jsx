@@ -117,7 +117,7 @@ throw error;
 
 const fetchEntityCollection = async (type) => {
 try {
-const response = await fetch(`${SWAPI_BASE_URL}/${type}?page=1&limit=8`);
+const response = await fetch(`${SWAPI_BASE_URL}/${type}?page=1&limit=50`);
 if (!response.ok) {
 throw new Error(`Unable to fetch ${type}`);
 }
