@@ -28,39 +28,6 @@ summaryFields: ["population", "terrain", "climate"]
 }
 };
 
-const DESCRIPTIONS = {
-people: {
-"1": "A young farm boy from Tatooine who becomes one of the greatest Jedi in the galaxy. Known for his bravery, optimism, and connection to the Force, Luke helps defeat the Empire and redeem Darth Vader.",
-"2": "A golden protocol droid designed for etiquette and translation. C-3PO is fluent in millions of languages and is famous for being nervous, talkative, and loyal to his friends.",
-"3": "A resourceful astromech droid who assists pilots, repairs ships, and stores important data. R2-D2 is courageous, clever, and communicates through electronic beeps and whistles.",
-"4": "A powerful Sith Lord once known as Anakin Skywalker. Wearing black armor and a mechanical breathing suit, Vader serves the Empire before ultimately returning to the light side.",
-"5": "A fearless princess, military leader, and member of the Rebel Alliance. Leia is intelligent, determined, and dedicated to fighting against tyranny in the galaxy.",
-"6": "A moisture farmer living on Tatooine and the uncle of Luke Skywalker. Owen is practical, protective, and tries to keep Luke away from dangerous adventures.",
-"7": "Luke Skywalker's caring aunt who lives on the Lars moisture farm. Beru is compassionate and supportive, encouraging Luke to dream beyond his life on Tatooine.",
-"8": "A red astromech droid originally selected by Owen Lars before malfunctioning. The breakdown leads Luke's family to purchase R2-D2 instead."
-},
-vehicles: {
-"4": "A massive desert transport vehicle operated by Jawas on Tatooine. Sandcrawlers carry scavenged machinery, droids, and supplies across the harsh dunes.",
-"6": "A high-speed civilian airspeeder used for recreation and training on Tatooine. Luke Skywalker practiced flying and target shooting with this vehicle before becoming a pilot.",
-"7": "A compact hovering vehicle commonly used on Tatooine. Luke uses an X-34 landspeeder for transportation across the desert settlements.",
-"8": "The standard Imperial starfighter used by the Galactic Empire. It is fast, agile, and recognizable by its twin vertical solar panel wings.",
-"14": "A modified airspeeder used by the Rebel Alliance during the Battle of Hoth. Snowspeeders are equipped with harpoons and tow cables for combat against walkers.",
-"16": "An advanced Imperial starfighter designed for greater speed and firepower. Its sharp wing design makes it one of the Empire's deadliest starfighters.",
-"18": "A gigantic four-legged armored walker used by the Galactic Empire. AT-ATs transport troops and heavy weapons, especially during assaults like the Battle of Hoth.",
-"19": "A smaller two-legged Imperial walker used for scouting and ground support. AT-STs are fast and heavily armed but less armored than AT-ATs."
-},
-planets: {
-"1": "A desert planet with twin suns located in the Outer Rim. Tatooine is home to smugglers, moisture farmers, Jawas, and the childhood home of Luke Skywalker.",
-"2": "A peaceful and beautiful world known for diplomacy and culture. Alderaan is the home planet of Leia Organa and is destroyed by the Death Star.",
-"3": "A jungle-covered moon that serves as an important Rebel Alliance base. The Rebels launch their attack on the Death Star from Yavin IV.",
-"4": "An icy and remote world used as a hidden Rebel base. Hoth becomes the site of a major battle between the Rebels and the Galactic Empire.",
-"5": "A swamp-covered planet strong in the Force. Jedi Master Yoda lives in exile on Dagobah and trains Luke Skywalker there.",
-"6": "A gas giant famous for Cloud City, a floating mining colony. Bespin becomes the location of Luke Skywalker's duel with Darth Vader.",
-"7": "A forest moon inhabited by the Ewoks. The Rebel Alliance fights a crucial battle on Endor to destroy the Empire's shield generator.",
-"8": "A lush planet known for its lakes, elegant cities, and peaceful culture. Naboo is the homeworld of Padmé Amidala and Emperor Palpatine."
-}
-};
-
 const FALLBACK_DATA = {
 	people: [
 		{ id: "1", name: "Luke Skywalker", gender: "male", hair_color: "blond", eye_color: "blue" },
@@ -408,8 +375,6 @@ if (!entity) return [];
 return Object.entries(entity).filter(([key]) => key !== "id");
 }, [entity]);
 
-const customDescription = DESCRIPTIONS[type]?.[id];
-
 useEffect(() => {
 if (!type || !id) {
 setError("Invalid entity type");
@@ -462,7 +427,8 @@ event.currentTarget.src =
 <div>
 <h1 className="section-title mb-2">{entity.name}</h1>
 <p className="text-muted">
-{customDescription || `Explore key facts about this ${ENTITY_CONFIG[type].singular} from the Star Wars universe.`}
+Explore key facts about this {ENTITY_CONFIG[type].singular} from
+the Star Wars universe.
 </p>
 </div>
 <FavoriteButton item={{ id: entity.id, name: entity.name, type }} />
