@@ -5,7 +5,7 @@ import { useFavorites } from "../context/favoritesContext.jsx";
 
 const SWAPI_BASE_URL = "https://www.swapi.tech/api";
 const IMAGE_BASE_URL =
-"https://github.com/breatheco-de/swapi-images/blob/master/public/images";
+"https://via.placeholder.com/400x300?text=Star+Wars";
 
 const ENTITY_CONFIG = {
 people: {
@@ -79,7 +79,7 @@ const getApiType = (typeParam) => TYPE_ALIASES[typeParam] || null;
 const getImageUrl = (type, id) => {
 const config = ENTITY_CONFIG[type];
 if (!config) return "";
-return `${IMAGE_BASE_URL}/${config.imageFolder}/${id}.jpg?raw=true`;
+return `${IMAGE_BASE_URL}/${config.imageFolder}/${id}`;
 };
 
 const formatLabel = (key) =>
